@@ -17,7 +17,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	 */
 	public LRUCache (DataProvider<T, U> provider, int capacity) {
 		_numMisses = 0;
-		_hashmap = new HashMap<>(capacity);
+		_hashmap = new HashMap<>();
 		_linkedList = new LinkedList<>();
 		_dataProvider = provider;
 		_capacity = capacity;
@@ -35,7 +35,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
 			 element = _hashmap.get(key);
 			_linkedList.remove(element);
 			_linkedList.addFirst(element);
-		} else {
+		} else { // if cache miss
 			_numMisses++;
 			final U value = _dataProvider.get(key);
 			element = new ListElement<>(key, value);
@@ -43,6 +43,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
 			_linkedList.addFirst(element);
 		}
 
+		// if cache is full
 		if (_linkedList.size() > _capacity) {
 			final ListElement<T, U> lastElement = _linkedList.removeLast();
 			_hashmap.remove(lastElement.getKey());
@@ -57,5 +58,24 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	 */
 	public int getNumMisses () {
 		return _numMisses;
+	}
+
+	public static class ListElement<T, U> { // public because ExampleDataProvider utilizes it
+
+		private T key;
+		private U value;
+
+		public ListElement(T key, U value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		public T getKey() {
+			return key;
+		}
+
+		public U getValue() {
+			return value;
+		}
 	}
 }

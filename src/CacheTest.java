@@ -26,7 +26,6 @@ public class CacheTest {
 		System.out.println(cache.get(0));
 		System.out.println(provider.getNumFetches());
 	}
-	
 
 	private ArrayList<Integer> generateNumbers(int start, int end) {
 		ArrayList<Integer> list = new ArrayList<>();
