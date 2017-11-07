@@ -1,4 +1,4 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.*; 
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,24 +9,30 @@ import java.util.List;
  * Code to test an <tt>LRUCache</tt> implementation.
  */
 public class CacheTest {
-	@Test
-	public void leastRecentlyUsedIsCorrect () {
+	ArrayList<Integer> listOfNum;
+	ArrayList<String> listOfStrings;
+	ExampleDataProvider<Integer,String> provider;
+	Cache<Integer,String> cache;
+	
+	@Before
+	public void initialize() {
 
-		final ArrayList<Integer> listOfNum = generateNumbers(0, 10);
-		final ArrayList<String> listOfStrings = generateStrings('a', 'j');
+		listOfNum = generateNumbers(0, 10);
+		listOfStrings = generateStrings('a', 'j');
 
 
-		ExampleDataProvider<Integer,String> provider = new ExampleDataProvider<>(listOfNum, listOfStrings);
-		Cache<Integer,String> cache = new LRUCache<>(provider, 5);
+		provider = new ExampleDataProvider<>(listOfNum, listOfStrings);
+		cache = new LRUCache<>(provider, 5);
 
-		System.out.println(cache.getNumMisses());
-		System.out.println(cache.get(0));
-		System.out.println(cache.getNumMisses());
-		System.out.println(provider.getNumFetches());
-		System.out.println(cache.get(0));
-		System.out.println(cache.getNumMisses());
-		System.out.println(provider.getNumFetches());
+		fillCache();
+//		System.out.println(cache.getNumMisses());
+//		System.out.println(cache.get(0));
+//		System.out.println(cache.getNumMisses());
+//		System.out.println(provider.getNumFetches());
+//		System.out.println(cache.get(0));
+//		System.out.println(provider.getNumFetches());
 	}
+	
 
 	private ArrayList<Integer> generateNumbers(int start, int end) {
 		ArrayList<Integer> list = new ArrayList<>();
@@ -43,4 +49,37 @@ public class CacheTest {
 		}
 		return list;
 	}
+	
+	private void fillCache(){
+		for(int i=0;i<5;i++){
+			cache.get(i);
+		}
+	}
+	
+	@Test
+	public void fillRestOfCacheAndTestNumMisses(){
+		assertEquals(cache.getNumMisses(), 5);
+	}
+	
+	@Test
+	public void callInCache(){
+		cache.get(0);
+		assertEquals(cache.getNumMisses(), 5);
+	}
+	
+	@Test
+	public void callOutCache(){
+		cache.get(5);
+		assertEquals(cache.getNumMisses(), 6);
+	}
+	
+	@Test
+	public void callRemovedObject(){
+		cache.get(5);
+		assertEquals(cache.getNumMisses(), 6);
+		cache.get(0);
+		assertEquals(cache.getNumMisses(), 7);
+	}
+	
+	
 }
