@@ -24,6 +24,7 @@ public class CacheTest {
 		System.out.println(cache.getNumMisses());
 		System.out.println(provider.getNumFetches());
 		System.out.println(cache.get(0));
+		System.out.println(cache.getNumMisses());
 		System.out.println(provider.getNumFetches());
 	}
 

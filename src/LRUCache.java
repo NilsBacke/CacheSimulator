@@ -69,6 +69,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	private void addToFront(Node node) {
 		if (_head == null) {
 			_head = node;
+			_tail = node;
 		} else {
 			Node newSecondNode = _head;
 			_head = node;
@@ -83,13 +84,22 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	 */
 	private void remove(Node node) {
 		if (node == _head) {
-			_head = null;
+			_head._next._prev = null;
+			_head = _head._next;
+		} else if (node == _tail) {
+			_tail._prev._next = null;
+			_tail._prev = _tail;
 		} else {
 			node._prev._next = node._next;
 			node._next._prev = node._prev;
 		}
 	}
 
+	/**
+	 * A single element used in the implementation of the linked list and hashmap
+	 * @param <T> The key data type
+	 * @param <U> The value data type
+	 */
 	private class Node<T, U> {
 
 		private T _key;
