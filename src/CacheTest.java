@@ -20,19 +20,13 @@ public class CacheTest {
 		listOfNum = generateNumbers(0, 10);
 		listOfStrings = generateStrings('a', 'j');
 
-
 		provider = new ExampleDataProvider<>(listOfNum, listOfStrings);
 		cache = new LRUCache<>(provider, 5);
 
-		fillCache();
-//		System.out.println(cache.getNumMisses());
-//		System.out.println(cache.get(0));
-//		System.out.println(cache.getNumMisses());
-//		System.out.println(provider.getNumFetches());
-//		System.out.println(cache.get(0));
-//		System.out.println(provider.getNumFetches());
+		assertEquals(cache.getNumMisses(), 0); // numMisses is initialized as 0
+
+		cache = fillCache(cache);
 	}
-	
 
 	private ArrayList<Integer> generateNumbers(int start, int end) {
 		ArrayList<Integer> list = new ArrayList<>();
@@ -50,35 +44,54 @@ public class CacheTest {
 		return list;
 	}
 	
-	private void fillCache(){
+	private Cache fillCache(Cache cache1){
 		for(int i=0;i<5;i++){
-			cache.get(i);
+			cache1.get(i);
 		}
+		return cache1;
 	}
-	
 	@Test
-	public void fillRestOfCacheAndTestNumMisses(){
+	public void fillCacheAndTestNumMisses(){
 		assertEquals(cache.getNumMisses(), 5);
+		assertEquals(provider.getNumFetches(), 5);
 	}
 	
 	@Test
 	public void callInCache(){
 		cache.get(0);
 		assertEquals(cache.getNumMisses(), 5);
+		assertEquals(provider.getNumFetches(), 5);
 	}
 	
 	@Test
 	public void callOutCache(){
 		cache.get(5);
 		assertEquals(cache.getNumMisses(), 6);
+		assertEquals(provider.getNumFetches(), 6);
 	}
 	
 	@Test
 	public void callRemovedObject(){
 		cache.get(5);
 		assertEquals(cache.getNumMisses(), 6);
+		assertEquals(provider.getNumFetches(), 6);
 		cache.get(0);
 		assertEquals(cache.getNumMisses(), 7);
+		assertEquals(provider.getNumFetches(), 7);
+	}
+
+	@Test
+	public void fillCacheThenCallLRUObject() {
+		ExampleDataProvider<Integer, String> testProvider = new ExampleDataProvider<>(listOfNum, listOfStrings);
+		Cache<Integer, String> testCache = new LRUCache<>(testProvider, 5);
+		assertEquals(testCache.getNumMisses(), 0);
+
+		testCache = fillCache(testCache);
+
+		assertEquals(testCache.get(6), "g"); // from data provider
+		assertEquals(testCache.get(6), "g"); // from cache
+		assertEquals(testCache.getNumMisses(), 6);
+		assertEquals(testProvider.getNumFetches(), 6);
 	}
 	
 	
