@@ -90,6 +90,9 @@ public class CacheTest {
 		testCache = fillCache(testCache);
 
 		assertEquals(testCache.get(6), "g"); // from data provider
+		assertEquals(testCache.getNumMisses(), 6);
+		assertEquals(testProvider.getNumFetches(), 6);
+		
 		assertEquals(testCache.get(6), "g"); // from cache
 		assertEquals(testCache.getNumMisses(), 6);
 		assertEquals(testProvider.getNumFetches(), 6);
