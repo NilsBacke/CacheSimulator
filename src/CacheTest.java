@@ -9,10 +9,10 @@ import java.util.List;
  * Code to test an <tt>LRUCache</tt> implementation.
  */
 public class CacheTest {
-	ArrayList<Integer> listOfNum;
-	ArrayList<String> listOfStrings;
-	ExampleDataProvider<Integer,String> provider;
-	Cache<Integer,String> cache;
+	private ArrayList<Integer> listOfNum;
+	private ArrayList<String> listOfStrings;
+	private ExampleDataProvider<Integer,String> provider;
+	private Cache<Integer,String> cache;
 	
 	@Before
 	public void initialize() {
@@ -86,6 +86,7 @@ public class CacheTest {
 		Cache<Integer, String> testCache = new LRUCache<>(testProvider, 5);
 		assertEquals(testCache.getNumMisses(), 0);
 
+		// filling the new cache
 		testCache = fillCache(testCache);
 
 		assertEquals(testCache.get(6), "g"); // from data provider
